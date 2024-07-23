@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Video Downloader</h1>
+        <div class="form-group">
+            <input type="text" id="videoURL" placeholder="Enter YouTube URL" value="Enter url">
+            <button id="downloadBtn">Download</button>
+        </div>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const videoURL = document.getElementById('videoURL').value;
+            if (!videoURL) {
+                alert('Please enter a YouTube URL');
+                return;
+            }
+
+            // API URL
+            const apiUrl = 'https://api.apify.com/v2/key-value-stores/fpmCnEkWlRujDgf2d/records/ttziVEY1GMTGWJI1';
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.url === videoURL) {
+                        const link = document.createElement('a');
+                        link.href = data.downloadURL;
+                        link.innerText = 'Download Video';
+                        link.target = '_blank';
+                        document.getElementById('result').innerHTML = '';
+                        document.getElementById('result').appendChild(link);
+                    } else {
+                        document.getElementById('result').innerText = 'Failed to fetch download link';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('result').innerText = 'An error occurred';
+                });
+        });
+    </script>
+</body>
+</html>
